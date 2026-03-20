@@ -1,0 +1,21 @@
+<h2>Explain Code</h2>
+<textarea rows="6" cols="60" [(ngModel)]="code"></textarea>
+
+<br/> <br/>
+
+<select [(ngModel)]="provider">
+    <option value="mock">Mock</option>
+    <option value="public">Public</option>
+    <option value="hf">HuggingFace</option>
+</select>
+
+<br/> <br/>
+
+<button (click)="explain()">Explain</button>
+
+<br/> <br/>
+
+<h3>Result:</h3>
+<div>
+    {{result}}
+</div>
