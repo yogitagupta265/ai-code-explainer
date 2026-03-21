@@ -94,6 +94,26 @@ AICodeExplainer
 
 ---
 
+---
+
+### Day5
+✔ UI improved (clean layout, centered UI, better spacing)  
+✔ Result box styling added (dark theme, formatted output, scroll support)  
+✔ Fixed long text overflow issue in result  
+✔ Loader added while API is processing  
+✔ Button disabled during API call  
+✔ Error handling UI added  
+✔ Parsed HuggingFace JSON response (return only AI message)  
+✔ Backend response cleaned before sending to UI  
+✔ Moved API key to application.properties  
+✔ Used @Value to inject config securely  
+✔ Removed secrets from source code  
+✔ Added application.properties to .gitignore  
+✔ Removed properties file from git cache  
+✔ Project now follows secure config practice
+
+---
+
 ## API
 
 POST /api/explain
@@ -130,10 +150,11 @@ meta-llama/Meta-Llama-3-8B-Instruct
 
 ## Notes
 
-Secrets will be moved to application.properties in future.
-Project created for learning GenAI integration in Spring Boot.
+Secrets stored in application.properties (not committed to git)
+Project created for learning GenAI integration in Spring Boot + Angular
+Following secure config and clean architecture practices
 
 ## Status
 
 Project in progress  
-Goal: Full stack GenAI demo project with multiple providers
+Goal: Full stack GenAI demo project with clean UI, secure config, and multi-provider AI integration

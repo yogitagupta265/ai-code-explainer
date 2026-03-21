@@ -1,5 +1,7 @@
 package com.ai.codeexplainer.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -8,7 +10,8 @@ import java.util.Map;
 @Service
 public class FinalAiService {
 
-    private final String API_KEY = "YOUR_TOKEN";
+    @Value("${hf.api.key}")
+    private  String API_KEY;
     private final WebClient publicWebClient;
     private final WebClient hfWebClient;
 
@@ -59,10 +62,20 @@ public class FinalAiService {
                     }
             );
 
+            // returning full json
+/*
             return hfWebClient.post().uri("/v1/chat/completions")
                     .header("Authorization", "Bearer "+ API_KEY)
                     .header("Content-Type", "application/json")
                     .bodyValue(reqBody).retrieve().bodyToMono(String.class).block();
+*/
+            // parsing the json
+            JsonNode response = hfWebClient.post().uri("/v1/chat/completions")
+                    .header("Authorization", "Bearer "+ API_KEY)
+                    .header("Content-Type", "application/json")
+                    .bodyValue(reqBody).retrieve().bodyToMono(JsonNode.class).block();
+
+            return response.get("choices").get(0).get("message").get("content").asText();
 
         }catch (Exception ex){
             return "HuggingFace error -> fallback mock";

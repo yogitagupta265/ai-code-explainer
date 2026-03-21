@@ -1,21 +1,28 @@
-<h2>Explain Code</h2>
-<textarea rows="6" cols="60" [(ngModel)]="code"></textarea>
+<div class="container">
+    <h2>Explain Code</h2>
+    <textarea rows="8" [(ngModel)]="code" placeholder="Paste you code here"></textarea>
 
-<br/> <br/>
+    <br/> <br/>
 
-<select [(ngModel)]="provider">
-    <option value="mock">Mock</option>
-    <option value="public">Public</option>
-    <option value="hf">HuggingFace</option>
-</select>
+    <select [(ngModel)]="provider">
+        <option value="mock">Mock</option>
+        <option value="public">Public</option>
+        <option value="hf">HuggingFace</option>
+    </select>
 
-<br/> <br/>
+    <br/> <br/>
 
-<button (click)="explain()">Explain</button>
+    <button (click)="explain()" [disabled]="loading">{{loading ? 'Loading...' : 'Explain Code'}}
+    </button>
 
-<br/> <br/>
+    <div *ngIf="loading" class="loader">Loading Ai Response</div>
 
-<h3>Result:</h3>
-<div>
-    {{result}}
+    <br/> <br/>
+
+    <div *ngIf="error" class="error-box">{{error}}</div>
+
+    <div class="result-box" *ngIf="result">
+        <pre>{{result}}</pre>
+    </div>
+
 </div>
