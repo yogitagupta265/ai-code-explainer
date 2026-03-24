@@ -27,6 +27,11 @@ AI
 - End to end UI → Backend → AI flow
 - Real world deployable project
 - Provider switch support
+- Standard API response wrapper
+- Global exception handling
+- Secure config using application.properties
+- DTO based architecture
+- Production style backend structure
 
 ## Project Structure
 
@@ -114,21 +119,54 @@ AICodeExplainer
 
 ---
 
+### Day6
+✔ Added DTO layer (ExplainRequest / ExplainResponse)  
+✔ Introduced ApiResponse<T> wrapper for standard API response  
+✔ Implemented Global Exception Handler using @RestControllerAdvice  
+✔ Added ErrorResponse structure for failures  
+✔ Added validation for provider in service layer  
+✔ Throwing RuntimeException for invalid provider  
+✔ Standardized API success / error format  
+✔ Refactored controller to use DTO instead of raw String  
+✔ Backend now follows real-world Spring Boot architecture  
+✔ Improved project structure (dto / exception / service separation)
+
+---
+
 ## API
 
-POST /api/explain
+POST /api/explainCode
 
 Body
+
 {
 "code": "int a = 5;"
 }
 
-
 Optional param
-/api/explain?provider=mock
-/api/explain?provider=public
-/api/explain?provider=hf
 
+/api/explainCode?provider=mock  
+/api/explainCode?provider=public  
+/api/explainCode?provider=hf
+
+Response format (Success)
+
+{
+"status": "SUCCESS",
+"data": {
+"result": "...",
+"provider": "hf"
+},
+"message": null
+}
+
+Response format (Error)
+
+{
+"status": "FAILED",
+"data": null,
+"message": "Invalid provider"
+}
 
 ---
 
@@ -150,11 +188,22 @@ meta-llama/Meta-Llama-3-8B-Instruct
 
 ## Notes
 
-Secrets stored in application.properties (not committed to git)
-Project created for learning GenAI integration in Spring Boot + Angular
-Following secure config and clean architecture practices
+Secrets stored in application.properties (not committed to git)  
+Global exception handling implemented  
+Standard API response format used  
+DTO + Service + Exception architecture followed  
+Project created to demonstrate real-world Spring Boot + Angular + GenAI integration
+
+## Architecture
+
+Controller → Service → Provider → External API  
+DTO used for request/response  
+ApiResponse used for standard output  
+GlobalExceptionHandler for error handling  
+application.properties for secrets
 
 ## Status
 
 Project in progress  
 Goal: Full stack GenAI demo project with clean UI, secure config, and multi-provider AI integration
+
