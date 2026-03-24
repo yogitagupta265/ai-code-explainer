@@ -1,5 +1,8 @@
 package com.ai.codeexplainer.controller;
 
+import com.ai.codeexplainer.dto.APIResponse;
+import com.ai.codeexplainer.dto.ExplainRequest;
+import com.ai.codeexplainer.dto.ExplainResponse;
 import com.ai.codeexplainer.service.AIService;
 import com.ai.codeexplainer.service.FinalAiService;
 import com.ai.codeexplainer.service.PublicApiService;
@@ -36,7 +39,10 @@ public class CodeController {
     }
 
     @PostMapping("/explainCode")
-    public String explainCode(@RequestBody Map<String, String> body, @RequestParam(required = false) String provider){
-        return finalAiService.explainCode(body.get("code"), provider);
+    public APIResponse<ExplainResponse> explainCode(@RequestBody ExplainRequest request, @RequestParam(required = false) String provider){
+        String result = finalAiService.explainCode(request.getCode(), provider);
+
+        ExplainResponse response = new ExplainResponse(provider,result);
+        return new APIResponse<>("SUCCESS",response,null);
     }
 }

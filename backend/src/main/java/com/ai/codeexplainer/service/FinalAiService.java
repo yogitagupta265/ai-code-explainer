@@ -34,8 +34,11 @@ public class FinalAiService {
             case "hf":
                 return callHF(code);
 
-            default:
+            case "mock":
                 return mock(code);
+
+            default:
+                throw new RuntimeException("Invalid provider : "+provider);
         }
     }
 
