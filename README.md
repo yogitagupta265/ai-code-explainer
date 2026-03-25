@@ -133,6 +133,19 @@ AICodeExplainer
 
 ---
 
+### Day7
+✔ Logger added (manual SLF4J logger)
+✔ Enum created for provider selection
+✔ Provider parsing logic added
+✔ Service refactored using switch expression
+✔ Validation added using @Valid and @NotBlank
+✔ GlobalExceptionHandler improved for validation errors
+✔ Clean API response handling
+✔ Code cleanup in FinalAiService
+✔ Improved error handling and logging
+
+---
+
 ## API
 
 POST /api/explainCode

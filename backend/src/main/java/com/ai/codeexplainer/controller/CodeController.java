@@ -3,9 +3,11 @@ package com.ai.codeexplainer.controller;
 import com.ai.codeexplainer.dto.APIResponse;
 import com.ai.codeexplainer.dto.ExplainRequest;
 import com.ai.codeexplainer.dto.ExplainResponse;
+import com.ai.codeexplainer.enums.Provider;
 import com.ai.codeexplainer.service.AIService;
 import com.ai.codeexplainer.service.FinalAiService;
 import com.ai.codeexplainer.service.PublicApiService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +41,7 @@ public class CodeController {
     }
 
     @PostMapping("/explainCode")
-    public APIResponse<ExplainResponse> explainCode(@RequestBody ExplainRequest request, @RequestParam(required = false) String provider){
+    public APIResponse<ExplainResponse> explainCode(@Valid @RequestBody ExplainRequest request, @RequestParam(required = false) String provider){
         String result = finalAiService.explainCode(request.getCode(), provider);
 
         ExplainResponse response = new ExplainResponse(provider,result);

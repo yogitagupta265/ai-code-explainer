@@ -1,6 +1,8 @@
 package com.ai.codeexplainer.dto;
+import jakarta.validation.constraints.NotBlank;
 
 public class ExplainRequest {
+    @NotBlank(message = "Code cannot be empty")
     private String code;
 
     public ExplainRequest(){}

@@ -1,6 +1,9 @@
 package com.ai.codeexplainer.service;
 
+import com.ai.codeexplainer.enums.Provider;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,6 +18,8 @@ public class FinalAiService {
     private final WebClient publicWebClient;
     private final WebClient hfWebClient;
 
+    private static final Logger log = LoggerFactory.getLogger(FinalAiService.class);
+
     public FinalAiService(){
         // public api client
         this.publicWebClient = WebClient.builder().baseUrl("https://api.adviceslip.com").build();
@@ -22,24 +27,32 @@ public class FinalAiService {
         this.hfWebClient = WebClient.builder().baseUrl("https://router.huggingface.co").build();
     }
 
-    public String explainCode(String code , String provider){
-        if(provider== null){
-            provider = "mock";
-        }
+    public String explainCode(String code , String providerStr){
 
-        switch (provider.toLowerCase()){
-            case "public":
-                return callPublic(code);
+        code = code.trim();
+        Provider provider = getProvider(providerStr);
 
-            case "hf":
-                return callHF(code);
+        log.info("Explain Request received , provider : {}", provider);
 
-            case "mock":
-                return mock(code);
-
-            default:
-                throw new RuntimeException("Invalid provider : "+provider);
-        }
+        return switch (provider) {
+            case PUBLIC -> {
+                log.info("Using PUBLIC provider");
+                yield callPublic(code);
+            }
+            case HF -> {
+                log.info("Using HUGGINGFACE provider");
+                yield callHF(code);
+            }
+            case MOCK -> {
+                log.info("Using MOCK provider");
+                yield mock(code);
+            }
+            //this can be removed as Provider has enum values and Java already guarantees only these values
+           /* default -> {
+                log.error("Invalid provider : {}", provider);
+                throw new RuntimeException("Invalid provider : " + provider);
+            }*/
+        };
     }
 
 /*mock code*/
@@ -60,7 +73,7 @@ public class FinalAiService {
                     "messages", new Object[]{
                             Map.of(
                                     "role", "user",
-                                    "content", "Expalin this code :" + code
+                                    "content", "Expalin this code: " + code
                             )
                     }
             );
@@ -81,7 +94,19 @@ public class FinalAiService {
             return response.get("choices").get(0).get("message").get("content").asText();
 
         }catch (Exception ex){
+            log.error("HF API Error: ",ex);
             return "HuggingFace error -> fallback mock";
+        }
+    }
+
+    private Provider getProvider(String provider){
+        if(provider == null || provider.isBlank()){
+            return Provider.MOCK;
+        }
+        try {
+            return Provider.valueOf(provider.toUpperCase());
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid provider :"+provider);
         }
     }
 }
