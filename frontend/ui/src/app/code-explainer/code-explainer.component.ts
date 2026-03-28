@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { marked } from 'marked';
 
+interface APIResponse{
+  status:string;
+  data:any;
+  message:string;
+}
 @Component({
   selector: 'app-code-explainer',
   standalone: true,
@@ -10,15 +16,22 @@ import { CommonModule } from '@angular/common';
   templateUrl: './code-explainer.component.html',
   styleUrls : ['./code-explainer.component.css']
 })
+
 export class CodeExplainerComponent {
     code ='';
-    provider ='mock'
+    selectedProvider ='mock'
     result=''
 
     loading =false;
     error =''
     
+    providers=[
+      {label:'Mock' ,value:'mock'},
+      {label:'Public API', value:'public'},
+      {label:'HuggingFace AI',value:'hf'}
+    ];
 
+    
     constructor(private http:HttpClient) {}
 
     explain(){
@@ -31,13 +44,26 @@ export class CodeExplainerComponent {
         code : this.code
       };
 
-      this.http.post("http://localhost:8080/api/explainCode?provider="+this.provider,body,{responseType:'text'}).subscribe({
-        next : res => {
-          this.result=res;
-          this.loading=false;
+      this.http.post<APIResponse>("http://localhost:8080/api/explainCode?provider="+this.selectedProvider,body,
+        //removed as we wanted to give a error box when empty input is given 
+        //{responseType:'text'}
+      ).subscribe({
+        next : (res : APIResponse) => {
+
+          if(res.status === 'FAILED'){
+            this.error =res.message;
+            this.result='';
+          }else{
+            /*
+            this.result=res.data?.result || res.data;
+            */
+           this.result = marked.parse(res.data?.result || res.data) as string;
+            this.error='';
+          }
+          this.loading=false; 
         },
         error: err => {
-          this.error = "Error in calling API";
+          this.error = "Something went wrong. Please try again.";
           this.loading=false;
         }
       })

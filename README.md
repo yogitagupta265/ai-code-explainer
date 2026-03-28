@@ -146,6 +146,25 @@ AICodeExplainer
 
 ---
 
+### Day8
+✔ Added provider dropdown in Angular UI (mock / public / hf)  
+✔ Integrated typed API response handling using APIResponse interface  
+✔ Removed raw text response handling and switched to structured JSON parsing  
+✔ Implemented proper success vs error handling based on API response status  
+✔ Displayed backend validation errors in UI (e.g., "Code cannot be empty")  
+✔ Added loading state with spinner animation  
+✔ Disabled button during API call to prevent duplicate requests  
+✔ Improved button UX with dynamic text (Loading... / Explain Code)  
+✔ Enhanced error UI with styled error box and better visibility  
+✔ Improved result display using preformatted container  
+✔ Integrated Markdown rendering using marked library  
+✔ Rendered AI response as formatted HTML (headings, lists, code blocks)  
+✔ Fixed long response formatting and overflow issues  
+✔ Improved UI styling (responsive container, textarea, button, layout)  
+✔ Created clean, readable, ChatGPT-like AI response UI
+
+---
+
 ## API
 
 POST /api/explainCode
