@@ -31,7 +31,7 @@ AI
 - Global exception handling
 - Secure config using application.properties
 - DTO based architecture
-- Production style backend structure
+- Production-grade backend architecture
 
 ## Project Structure
 
@@ -99,8 +99,6 @@ AICodeExplainer
 
 ---
 
----
-
 ### Day5
 ✔ UI improved (clean layout, centered UI, better spacing)  
 ✔ Result box styling added (dark theme, formatted output, scroll support)  
@@ -162,6 +160,20 @@ AICodeExplainer
 ✔ Fixed long response formatting and overflow issues  
 ✔ Improved UI styling (responsive container, textarea, button, layout)  
 ✔ Created clean, readable, ChatGPT-like AI response UI
+
+---
+
+### Day9
+✔ Implemented structured logging using SLF4J (LoggerFactory)  
+✔ Added logs at service and controller level  
+✔ Improved request tracing with provider and input logging  
+✔ Removed silent failures from HuggingFace API integration  
+✔ Exceptions now thrown instead of returning fallback responses  
+✔ Integrated proper exception flow (Service → GlobalExceptionHandler → UI)  
+✔ Improved GlobalExceptionHandler for validation and generic errors  
+✔ Backend now returns real errors instead of fake success responses  
+✔ Enhanced debugging capability with detailed logs  
+✔ Production-level error handling implemented
 
 ---
 

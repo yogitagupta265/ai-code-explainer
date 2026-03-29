@@ -29,6 +29,7 @@ public class FinalAiService {
 
     public String explainCode(String code , String providerStr){
 
+        log.info("Received explain request");
         code = code.trim();
         Provider provider = getProvider(providerStr);
 
@@ -95,7 +96,7 @@ public class FinalAiService {
 
         }catch (Exception ex){
             log.error("HF API Error: ",ex);
-            return "HuggingFace error -> fallback mock";
+            throw new RuntimeException("HuggingFace error -> fallback mock");
         }
     }
 

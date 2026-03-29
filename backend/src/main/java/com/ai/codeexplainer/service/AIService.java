@@ -15,6 +15,7 @@ public class AIService {
             .baseUrl("https://api.openai.com/v1/chat/completions")
             .defaultHeader("Authorization", "Bearer " + OPENAI_API_KEY)
             .build();
+
     public String explainCode(String code){
 
 
