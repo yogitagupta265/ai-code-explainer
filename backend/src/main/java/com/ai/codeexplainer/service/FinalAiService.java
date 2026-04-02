@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.util.retry.Retry;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Service
@@ -90,13 +92,28 @@ public class FinalAiService {
             JsonNode response = hfWebClient.post().uri("/v1/chat/completions")
                     .header("Authorization", "Bearer "+ API_KEY)
                     .header("Content-Type", "application/json")
-                    .bodyValue(reqBody).retrieve().bodyToMono(JsonNode.class).block();
+                    .bodyValue(reqBody).retrieve()
+                    .bodyToMono(JsonNode.class).
+                    timeout(Duration.ofSeconds(5)) //Added time out if the hF id slowand hangs -> fails if it takes > 5sec
+                    //retry 2 times -> improves success rate & handle temp network issue
+                    /*.retry(2) */  // adding exponential backoff -> safer, industry standard and used in microservices
+                    .retryWhen(reactor.util.retry.Retry.backoff(2,Duration.ofSeconds(1)))
+                    // on network errors
+/*
+                    .retryWhen(Retry.backoff(2, Duration.ofSeconds(1)).filter(e -> e instanceof RuntimeException))
+*/
+                    .block();
 
             return response.get("choices").get(0).get("message").get("content").asText();
 
         }catch (Exception ex){
-            log.error("HF API Error: ",ex);
-            throw new RuntimeException("HuggingFace error -> fallback mock");
+            // good for debugging but doesn't look great at user experience
+           /* log.error("HF API Error: ",ex);
+            throw new RuntimeException("Failed to get the response from HuggingFace");
+*/
+            //Want fallback to mock if HuggingFaces doesn't works
+            log.error("HF Api fails, switching to mock",ex);
+            return mock(code);
         }
     }
 

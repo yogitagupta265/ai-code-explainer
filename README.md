@@ -177,6 +177,18 @@ AICodeExplainer
 
 ---
 
+### Day10
+✔ Implemented API timeout handling using WebClient  
+✔ Added retry mechanism for failed API calls  
+✔ Implemented exponential backoff strategy for retries  
+✔ Improved resilience against temporary network/API failures  
+✔ Added fallback mechanism (HF → Mock) for better user experience  
+✔ System now guarantees response even if external API fails  
+✔ Implemented production-grade fault tolerance design  
+✔ Improved backend reliability and stability
+
+---
+
 ## API
 
 POST /api/explainCode
