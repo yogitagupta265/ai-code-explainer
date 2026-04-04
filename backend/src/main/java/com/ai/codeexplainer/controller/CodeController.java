@@ -33,6 +33,11 @@ public class CodeController {
     /*public CodeController(AIService aiService) {
         this.aiService = aiService;
     }*/
+
+    //Add rate limitimg
+    private final Map<String, Integer> requestCount = new HashMap<>();
+    private final Map<String, Long> requestTime = new HashMap<>();
+
     @PostMapping("/explain")
     public String explainCode(@RequestBody String code){
 //        String code = body.get("code");
@@ -48,9 +53,35 @@ public class CodeController {
     public APIResponse<ExplainResponse> explainCode(@Valid @RequestBody ExplainRequest request, @RequestParam(required = false) String provider){
 
         log.info("API explainCode called with provider : {}",provider);
+
+        String user = "defaultUser";
+        checkRateLimit(user);
         String result = finalAiService.explainCode(request.getCode(), provider);
 
         ExplainResponse response = new ExplainResponse(provider,result);
         return new APIResponse<>("SUCCESS",response,null);
+    }
+
+    private void checkRateLimit(String user){
+        long currTime = System.currentTimeMillis();
+
+        requestTime.putIfAbsent(user, currTime);
+        requestCount.putIfAbsent(user,0);
+
+        long lastRequestTime = requestTime.get(user);
+
+        //reset after 1 min
+        if (currTime-lastRequestTime > 60000){
+            requestTime.put(user,currTime);
+            requestCount.put(user,0);
+        }
+
+        int count = requestCount.get(user);
+
+        if (count>=5){
+            throw new RuntimeException("Rate limit exceeded. Try again later.");
+        }
+
+        requestCount.put(user, count+1);
     }
 }

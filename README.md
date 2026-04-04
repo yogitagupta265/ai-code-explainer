@@ -200,6 +200,17 @@ AICodeExplainer
 
 ---
 
+### Day12
+✔ Implemented basic rate limiting to prevent API abuse  
+✔ Limited requests per user (5 requests per minute)  
+✔ Added in-memory tracking for request count and timestamps  
+✔ Reset request count after defined time window  
+✔ Integrated rate limit check in controller layer  
+✔ Ensured controlled API usage and improved backend security  
+✔ Prevented excessive API calls to external services
+
+---
+
 ## API
 
 POST /api/explainCode
@@ -209,7 +220,7 @@ Body
 {
 "code": "int a = 5;"
 }
-
+git
 Optional param
 
 /api/explainCode?provider=mock  
