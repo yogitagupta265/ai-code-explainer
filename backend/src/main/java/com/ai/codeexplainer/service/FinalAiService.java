@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -21,6 +22,8 @@ public class FinalAiService {
     private final WebClient hfWebClient;
 
     private static final Logger log = LoggerFactory.getLogger(FinalAiService.class);
+    //this is in memory cache
+    private final Map<String, String> cache = new HashMap<>();
 
     public FinalAiService(){
         // public api client
@@ -30,14 +33,17 @@ public class FinalAiService {
     }
 
     public String explainCode(String code , String providerStr){
-
+        String cacheKey = providerStr+"::"+code;
         log.info("Received explain request");
         code = code.trim();
         Provider provider = getProvider(providerStr);
 
         log.info("Explain Request received , provider : {}", provider);
-
-        return switch (provider) {
+        if(cache.containsKey(cacheKey)){
+            log.info("Returning response from CACHE");
+            return cache.get(cacheKey);
+        }
+        String result= switch (provider) {
             case PUBLIC -> {
                 log.info("Using PUBLIC provider");
                 yield callPublic(code);
@@ -56,6 +62,9 @@ public class FinalAiService {
                 throw new RuntimeException("Invalid provider : " + provider);
             }*/
         };
+
+        cache.put(cacheKey,result);
+        return result;
     }
 
 /*mock code*/

@@ -189,6 +189,17 @@ AICodeExplainer
 
 ---
 
+### Day11
+✔ Implemented in-memory caching for API responses  
+✔ Cached responses based on (provider + code) combination  
+✔ Avoided redundant external API calls for repeated requests  
+✔ Improved performance with faster response time for repeated inputs  
+✔ Reduced dependency on external AI APIs  
+✔ Added logging to identify cache hits  
+✔ Optimized backend efficiency using simple caching strategy
+
+---
+
 ## API
 
 POST /api/explainCode
